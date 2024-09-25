@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to IT Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/images/image.jpg'); /* Adjust the path if necessary */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: rgba(30, 30, 30, 0.9); /* Darker background to contrast with the colorful background image */
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+            width: 350px;
+            text-align: center;
+            color: #ffffff; /* White text for better readability */
+            position: relative;
+            overflow: hidden;
+            transform: scale(0.85);
+            transition: transform 0.5s ease-in-out;
+        }
+        .login-container.show {
+            transform: scale(1);
+        }
+        .login-container::before, .login-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .login-container::before {
+            background: linear-gradient(45deg, rgba(0, 200, 0, 0.5), rgba(0, 100, 0, 0.5));
+            mix-blend-mode: overlay;
+            animation: animatedBackground 8s infinite linear;
+        }
+        @keyframes animatedBackground {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #ffffff; /* Light color for the title */
+            font-weight: bold;
+            font-size: 1.8rem;
+            position: relative;
+            z-index: 1;
+        }
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background for input fields */
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-control::placeholder {
+            color: #dddddd; /* Lighter placeholder text */
+        }
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.2); /* Lighten background on focus */
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+            outline: none;
+            transform: scale(1.05);
+        }
+        .btn-primary {
+            background-color: #00ff00; /* Bright green for the button */
+            border-color: #00ff00;
+            border-radius: 5px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .btn-primary:hover {
+            background-color: #00cc00; /* Slightly darker green on hover */
+            border-color: #00cc00;
+            transform: scale(1.1);
+        }
+        .forgot-password a {
+            color: #00ff00; /* Green link for "Forgot your password?" */
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+        .forgot-password a:hover {
+            color: #00cc00;
+            text-decoration: underline;
+        }
+        /* Particle effect */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        /* Shake effect for the login container */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+    </style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<div class="login-container" id="login-container">
+    <h2>Login to IT Management</h2>
+    <form action="/" method="POST" id="loginForm">
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+        <select class="form-select" id="role" name="role" required>
+            <option value="" disabled selected>Choose your role</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+            <option value="responsable_stock">Responsable Stock</option>
+        </select>
+        <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
+        <div class="forgot-password mt-3">
+            <a href="#">Forgot your password?</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+<script>
+    // Initialize particles.js for background effect
+    particlesJS('particles-js', {
+        "particles": {
+            "number": {
+                "value": 100,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+            },
+            "color": {
+                "value": "#00ff00"
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                }
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 1,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 5,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 40,
+                    "size_min": 0.1,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#00ff00",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 6,
+                "direction": "none",
+                "random": false,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                    "enable": false,
+                    "rotateX": 600,
+                    "rotateY": 1200
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "grab"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 140,
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": true
+    });
+
+    // Show login form with fade-in effect
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const loginContainer = document.getElementById('login-container');
+        setTimeout(() => {
+            loginContainer.classList.add('show');
+        }, 100);
+    });
+
+    // Password visibility toggle
+    const passwordField = document.getElementById('password');
+
+    passwordField.addEventListener('input', () => {
+        if (passwordField.value.length > 0) {
+            passwordField.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+        } else {
+            passwordField.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        }
+    });
+
+    // Form shake effect on invalid submission
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
+
+        if (!email || !password || !role) {
+            const loginContainer = document.getElementById('login-container');
+            loginContainer.classList.add('shake');
+            setTimeout(() => {
+                loginContainer.classList.remove('shake');
+            }, 500);
+        } else {
+            // Submit the form if everything is filled out
+            loginForm.submit();
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{materiel.edit.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{materiel.edit.headline}]]</h1>
+                <div>
+                    <a th:href="@{/materiels}" class="btn btn-secondary">[[#{materiel.edit.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('materiel')}" />
+            <form th:action="${requestUri}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='code', disabled=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='numeroSerie', required=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='marque', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='modele', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='libelle', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='description')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='accesoires', type='textarea')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='bonEntree', type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='materiel', field='bonSortie', type='select')}" />
+                <input type="submit" th:value="#{materiel.edit.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Bons de Sortie</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            flex-grow: 1;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+            color: #fff;
+            text-decoration: none;
+        }
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+        .logout {
+            margin-top: auto;
+        }
+        .logout a {
+            background-color: #e74c3c;
+            border-radius: 5px;
+            padding: 10px 0;
+            text-align: center;
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .logout a:hover {
+            background-color: #c0392b;
+        }
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            margin-left: 250px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .main-content h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: bold;
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .btn-add {
+            background-color: #3498db;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            font-weight: bold;
+        }
+        .btn-add i {
+            margin-right: 5px;
+        }
+        .btn-add:hover {
+            background-color: #2980b9;
+        }
+        .filter-input {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .filter-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+        }
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+        table {
+            background-color: #fff;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+            width: 100%;
+        }
+        th {
+            background-color: #34495e;
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        td:last-child {
+            text-align: center;
+        }
+        .table-actions button {
+            margin-right: 5px;
+        }
+        .btn-warning {
+            background-color: #f1c40f;
+            border: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .btn-warning:hover {
+            background-color: #f39c12;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            border: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .btn-info {
+            background-color: #3498db;
+            border: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .btn-info:hover {
+            background-color: #2980b9;
+        }
+        .modal-footer {
+            border-top: none;
+            text-align: right;
+        }
+        .btn-close {
+            font-size: 1.2rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h2><img src="/images/logoDSI.jpg" alt="Admin Profile Picture"></h2>
+    <ul>
+        <li><a href="/responsable"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="/responsable/materiels"><i class="fas fa-box"></i>Materials</a></li>
+        <li><a href="/responsable/bonSortie"><i class="fas fa-arrow-up"></i>Stock Release</a></li>
+        <li><a href="/responsable/bonEntree"><i class="fas fa-arrow-down"></i>Stock Entry</a></li>
+        <li><a href="/responsable/reservations"><i class="fas fa-users"></i>Reservations</a></li>
+    </ul>
+    <div class="logout">
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+</div>
+<div class="main-content">
+    <div class="profile-header">
+        <h2>Manage stock release</h2>
+        <div>
+            <img src="/images/admin.png" alt="Admin Icon">
+            <span th:text="${session.user3.nom + ' ' + session.user3.prenom}">Session User Name</span>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+    </div>
+
+    <!-- Error Message -->
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addBonSortieModal">
+        <i class="fas fa-plus-circle"></i> Add a new entry release
+    </button>
+
+    <!-- Filter Inputs -->
+    <div class="filter-input">
+        <input type="text" id="bonNumberFilter" class="form-control" placeholder="Number">
+        <input type="text" id="dateFilter" class="form-control" placeholder="Date of release">
+        <input type="text" id="emitterFilter" class="form-control" placeholder="Sender">
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Number</th>
+                <th>Date of release</th>
+                <th>Sender</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="bonSortieTableBody">
+            <tr th:each="bonSortie : ${bonSortieList}">
+                <td th:text="${bonSortie.numero != null ? bonSortie.numero : 'N/A'}">Number</td>
+                <td th:text="${bonSortie != null ? bonSortie.dateSortie : 'N/A'}">Date of release</td>
+                <td th:text="${bonSortie != null ? bonSortie.emetteur : 'N/A'}">Sender</td>
+                <td class="table-actions">
+                    <!-- Edit Button -->
+                    <button class="btn btn-warning btn-sm btn-edit" title="Edit"
+                            data-bs-toggle="modal" data-bs-target="#editBonSortieModal"
+                            th:data-id="${bonSortie != null ? bonSortie.numero : ''}">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+
+                    <!-- Delete Button -->
+                    <button class="btn btn-danger btn-sm btn-delete" title="Delete"
+                            data-bs-toggle="modal" data-bs-target="#deleteBonSortieModal"
+                            th:data-id="${bonSortie != null ? bonSortie.numero : ''}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+
+                    <!-- Details Button -->
+                    <button class="btn btn-info btn-sm btn-detail" title="Details"
+                            data-bs-toggle="modal" data-bs-target="#bonSortieDetailModal"
+                            th:data-id="${bonSortie != null ? bonSortie.numero : ''}">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </td>
+            </tr>
+
+            <!-- Handling empty list case -->
+            <tr th:if="${bonSortieList == null || #lists.isEmpty(bonSortieList)}">
+                <td colspan="4" class="text-center">No availabe entry release</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal for Adding New Bon de Sortie -->
+<div class="modal fade" id="addBonSortieModal" tabindex="-1" aria-labelledby="addBonSortieLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBonSortieLabel">Add a new entry release</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bonSortieForm" method="POST" action="/responsable/bonSortie/add">
+                    <div class="mb-3">
+                        <label for="sortieDate" class="form-label">Date of release</label>
+                        <input type="date" class="form-control" id="sortieDate" name="dateSortie" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="emetteur" class="form-label">Sender</label>
+                        <input type="text" class="form-control" id="emetteur" name="emetteur" th:value="${session.user3.prenom+' '+session.user3.nom}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="recepteur" class="form-label">Receiver</label>
+                        <input type="text" class="form-control" id="recepteur" name="recepteur" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="observations" class="form-label">Observations</label>
+                        <textarea class="form-control" id="observations" name="observations" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="materiels" class="form-label">Select materials</label>
+                        <select multiple class="form-control" id="materiels" name="materielIds">
+                            <option th:each="materiel : ${materielList}"
+                                    th:value="${materiel.code}"
+                                    th:text="${materiel.modele}">Materiel</option>
+                            <option th:if="${materielList == null || #lists.isEmpty(materielList)}" disabled>no available materials</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Filtering function for the Bon de Sortie table
+        const bonNumberFilter = document.getElementById('bonNumberFilter');
+        const dateFilter = document.getElementById('dateFilter');
+        const emitterFilter = document.getElementById('emitterFilter');
+        const tableBody = document.getElementById('bonSortieTableBody');
+
+        function filterTable() {
+            const filterValues = {
+                bonNumber: bonNumberFilter.value.toLowerCase(),
+                date: dateFilter.value.toLowerCase(),
+                emitter: emitterFilter.value.toLowerCase(),
+            };
+
+            for (const row of tableBody.rows) {
+                const cells = row.cells;
+                const showRow = (
+                    (!filterValues.bonNumber || cells[0].textContent.toLowerCase().includes(filterValues.bonNumber)) &&
+                    (!filterValues.date || cells[1].textContent.toLowerCase().includes(filterValues.date)) &&
+                    (!filterValues.emitter || cells[2].textContent.toLowerCase().includes(filterValues.emitter))
+                );
+                row.style.display = showRow ? '' : 'none';
+            }
+        }
+
+        // Attach the filtering functionality to the input fields
+        bonNumberFilter.addEventListener('input', filterTable);
+        dateFilter.addEventListener('input', filterTable);
+        emitterFilter.addEventListener('input', filterTable);
+
+        // Handle form submissions
+        const bonSortieForm = document.getElementById('bonSortieForm');
+
+        bonSortieForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            // Here you can add any additional validation or checks before submitting
+            this.submit(); // Submit the form if all checks pass
+        });
+
+        // Handle edit button click - populate the edit modal with the correct data
+        const editButtons = document.querySelectorAll('.btn-edit');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                // Set the form action to the correct URL for editing
+                const editForm = document.getElementById('editBonSortieForm');
+                editForm.action = '/responsable/bonSortie/edit/' + id;
+
+                // Fetch the existing Bon de Sortie data and populate the form fields if necessary
+                // You may need to use an AJAX call here to get the data for the selected bon de sortie
+            });
+        });
+
+        // Handle delete button click - populate the delete modal with the correct data
+        const deleteButtons = document.querySelectorAll('.btn-delete');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                // Set the form action to the correct URL for deleting
+                const deleteForm = document.getElementById('deleteBonSortieForm');
+                deleteForm.action = '/responsable/bonSortie/delete/' + id;
+            });
+        });
+
+        // Handle detail button click - display details of the selected bon de sortie
+        const detailButtons = document.querySelectorAll('.btn-detail');
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                // Fetch the details of the selected Bon de Sortie and display in the modal
+                // You may need to use an AJAX call here to get the details of the bon de sortie
+            });
+        });
+
+    });
+
+</script>
+</body>
+</html>

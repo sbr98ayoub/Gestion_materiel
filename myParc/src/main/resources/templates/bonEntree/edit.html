@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{bonEntree.edit.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{bonEntree.edit.headline}]]</h1>
+                <div>
+                    <a th:href="@{/bonEntrees}" class="btn btn-secondary">[[#{bonEntree.edit.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('bonEntree')}" />
+            <form th:action="${requestUri}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='bonEntree', field='numero', disabled=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='bonEntree', field='dateEntree', required=true, inputClass='js-datepicker')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='bonEntree', field='recepteur', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='bonEntree', field='emetteur', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='bonEntree', field='observations')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='bonEntree', field='listeArticles', type='textarea')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='bonEntree', field='userId', type='select')}" />
+                <input type="submit" th:value="#{bonEntree.edit.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

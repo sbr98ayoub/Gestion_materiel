@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsable Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Updated FontAwesome CDN link -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            flex-grow: 1;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+            color: #fff;
+            text-decoration: none;
+        }
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+        .logout {
+            margin-top: auto;
+        }
+        .logout a {
+            background-color: #e74c3c;
+            border-radius: 5px;
+            padding: 10px 0;
+            text-align: center;
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .logout a:hover {
+            background-color: #c0392b;
+        }
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            margin-left: 250px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .main-content h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: bold;
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .btn-add {
+            background-color: #3498db;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            font-weight: bold;
+        }
+        .btn-add i {
+            margin-right: 5px;
+        }
+        .btn-add:hover {
+            background-color: #2980b9;
+        }
+        .filter-input {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .filter-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+        }
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+            overflow-x: auto;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+        table {
+            background-color: #fff;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+            width: 100%;
+        }
+        th {
+            background-color: #34495e;
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+        }
+        th:nth-child(7), td:nth-child(7) {
+            width: 150px; /* Adjust width as needed */
+        }
+        th:nth-child(8), td:nth-child(8) {
+            width: 150px; /* Adjust width as needed */
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        td:last-child {
+            text-align: center;
+        }
+        .table-actions button {
+            margin-right: 5px;
+        }
+        .btn-warning {
+            background-color: #f1c40f;
+            border: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .btn-warning:hover {
+            background-color: #f39c12;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            border: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .btn-info {
+            background-color: #3498db;
+            border: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .btn-info:hover {
+            background-color: #2980b9;
+        }
+        .material-photo {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .details-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .details-text {
+            flex: 1;
+        }
+        .details-text p {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            line-height: 1.5;
+            color: #555;
+        }
+        .details-text p strong {
+            color: #333;
+        }
+        .details-photo {
+            flex: 0 0 45%;
+        }
+        .modal-footer {
+            border-top: none;
+            text-align: right;
+        }
+        .btn-close {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        /* New styles for status badges */
+        .badge-status {
+            display: inline-block;
+            padding: 0.5em 1em;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+        .badge-in-stock {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+        .badge-out-stock {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h2><img src="/images/logoDSI.jpg" alt="Admin Profile Picture" href="/"></h2>
+    <ul>
+        <li><a href="/responsable"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="/responsable/materiels"><i class="fas fa-box"></i> Matérials</a></li>
+        <li><a href="/responsable/bonEntree"><i class="fas fa-arrow-down"></i>Stock entry</a></li>
+        <li><a href="/responsable/bonSortie"><i class="fas fa-arrow-up"></i> Stock release</a></li>
+        <li><a href="/responsable/reservations"><i class="fas fa-users"></i> Reservations</a></li>
+    </ul>
+    <div class="logout">
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+</div>
+<div class="main-content">
+    <div class="profile-header">
+        <h2>Manage materiels</h2>
+        <div>
+            <img src="/images/admin.png" alt="Admin Icon">
+            <span th:text="${session.user3.nom + ' ' + session.user3.prenom}">Session User Name</span>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+    </div>
+
+    <!-- Error Message -->
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addMaterialModal">
+        <i class="fas fa-plus-circle"></i> add a new Matériel
+    </button>
+
+    <!-- Filter Inputs -->
+    <div class="filter-input">
+        <input type="text" id="serialNumberFilter" class="form-control" placeholder="Numéro de Série">
+        <input type="text" id="brandFilter" class="form-control" placeholder="Marque">
+        <input type="text" id="modelFilter" class="form-control" placeholder="Modèle">
+        <input type="text" id="labelFilter" class="form-control" placeholder="Libellé">
+        <input type="text" id="typeFilter" class="form-control" placeholder="Type de Matériel">
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Code</th>
+                <th>serial number</th>
+                <th>brand</th>
+                <th>model</th>
+                <th>Label</th>
+                <th>Type </th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="materialTableBody">
+            <tr th:each="material : ${materielList}">
+                <td th:text="${material.code}">Code</td>
+                <td th:text="${material.numeroSerie}">serial number</td>
+                <td th:text="${material.marque}">brand</td>
+                <td th:text="${material.modele}">model</td>
+                <td th:text="${material.libelle}">Label</td>
+                <td th:text="${material.typeMateriel}">Type</td>
+                <td>
+                    <span th:class="'badge-status ' + (${#strings.trim(material.status)} == 'IN_STOCK' ? 'badge-in-stock' : 'badge-out-stock')"
+                          th:text="${#strings.trim(material.status) == 'IN_STOCK' ? 'In Stock' : 'Out of Stock'}"></span>
+
+
+                </td>
+                <td class="table-actions">
+                    <!-- Edit Button -->
+                    <button class="btn btn-warning btn-sm btn-edit" title="Edit"
+                            data-bs-toggle="modal" data-bs-target="#editMaterialModal"
+                            th:data-id="${material.code}"
+                            th:data-serialnumber="${material.numeroSerie}"
+                            th:data-brand="${material.marque}"
+                            th:data-model="${material.modele}"
+                            th:data-label="${material.libelle}"
+                            th:data-type="${material.typeMateriel}"
+                            th:data-status="${material.status}">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+
+                    <!-- Delete Button -->
+                    <button class="btn btn-danger btn-sm btn-delete" title="Delete"
+                            data-bs-toggle="modal" data-bs-target="#deleteMaterialModal"
+                            th:data-id="${material.code}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+
+                    <!-- Details Button -->
+                    <button class="btn btn-info btn-sm btn-detail" title="Details"
+                            data-bs-toggle="modal" data-bs-target="#materialDetailModal"
+                            th:data-serialnumber="${material.numeroSerie}"
+                            th:data-brand="${material.marque}"
+                            th:data-model="${material.modele}"
+                            th:data-label="${material.libelle}"
+                            th:data-type="${material.typeMateriel}"
+                            th:data-status="${material.status}"
+                            th:data-photo="${material.imageUrl}">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal for Adding New Material -->
+<div class="modal fade" id="addMaterialModal" tabindex="-1" aria-labelledby="addMaterialLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMaterialLabel">Add a new material</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="materialForm" enctype="multipart/form-data" method="POST" action="/responsable/materiel/add">
+                    <div class="mb-3">
+                        <label for="serialNumber" class="form-label">serial Number</label>
+                        <input type="text" class="form-control" id="serialNumber" name="numeroSerie" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="materialType" class="form-label">Type de Matériel</label>
+                        <select class="form-select" id="materialType" name="typeMateriel" required>
+                            <option value="ORDINATEUR">PC</option>
+                            <option value="ORDINATEUR_PORTABLE">Laptop</option>
+                            <option value="ECRAN">Monitor</option>
+                            <option value="SOURIS">Mouse</option>
+                            <option value="UNITE_CENTRAL">CASE</option>
+                            <option value="SWITCH">Switch</option>
+                            <option value="ROUTEUR">Router</option>
+                        </select>
+
+
+
+
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="brand" class="form-label">Brand</label>
+                        <input type="text" class="form-control" id="brand" name="marque" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="model" class="form-label">model</label>
+                        <input type="text" class="form-control" id="model" name="modele" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="label" class="form-label">Label</label>
+                        <input type="text" class="form-control" id="label" name="libelle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="IN_STOCK" selected>In Stock</option>
+                            <option value="OUT_OF_STOCK">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageUpload" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="imageUpload" name="imageFile" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Viewing Material Details -->
+<div class="modal fade" id="materialDetailModal" tabindex="-1" aria-labelledby="materialDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="materialDetailModalLabel">Details of material</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="details-container">
+                    <div class="details-text">
+                        <p><strong>serial number:</strong> <span id="detailSerialNumber"></span></p>
+                        <p><strong>brand:</strong> <span id="detailBrand"></span></p>
+                        <p><strong>model:</strong> <span id="detailModel"></span></p>
+                        <p><strong>Label:</strong> <span id="detailLabel"></span></p>
+                        <p><strong>Type:</strong> <span id="detailType"></span></p>
+                        <p><strong>Status:</strong> <span id="detailStatus"></span></p>
+                    </div>
+                    <div class="details-photo">
+                        <img src="" alt="Material Photo" id="materialPhoto" class="material-photo">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Editing Material -->
+<div class="modal fade" id="editMaterialModal" tabindex="-1" aria-labelledby="editMaterialLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editMaterialLabel">Modifie a material</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editMaterialForm" enctype="multipart/form-data" method="POST">
+                    <div class="mb-3">
+                        <label for="editSerialNumber" class="form-label">Serial number</label>
+                        <input type="text" class="form-control" id="editSerialNumber" name="numeroSerie" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editMaterialType" class="form-label">Type</label>
+                        <select class="form-select" id="editMaterialType" name="typeMateriel" required>
+                            <option value="ORDINATEUR">PC</option>
+                            <option value="ORDINATEUR_PORTABLE">Laptop</option>
+                            <option value="ECRAN">Monitor</option>
+                            <option value="SOURIS">Mouse</option>
+                            <option value="UNITE_CENTRAL">Case</option>
+                            <option value="SWITCH">Switch</option>
+                            <option value="ROUTEUR">Router</option>
+
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editBrand" class="form-label">brand</label>
+                        <input type="text" class="form-control" id="editBrand" name="marque" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editModel" class="form-label">model</label>
+                        <input type="text" class="form-control" id="editModel" name="modele" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editLabel" class="form-label">Label</label>
+                        <input type="text" class="form-control" id="editLabel" name="libelle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStatus" class="form-label">Status</label>
+                        <select class="form-select" id="editStatus" name="status" required>
+                            <option value="IN_STOCK">In Stock</option>
+                            <option value="OUT_OF_STOCK">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editImageUpload" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="editImageUpload" name="imageFile">
+                    </div>
+                    <button type="submit" class="btn btn-success">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Deleting Material -->
+<div class="modal fade" id="deleteMaterialModal" tabindex="-1" aria-labelledby="deleteMaterialLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteMaterialLabel">delete Material</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this material ?</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteMaterialForm" method="POST">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const serialNumberFilter = document.getElementById('serialNumberFilter');
+        const brandFilter = document.getElementById('brandFilter');
+        const modelFilter = document.getElementById('modelFilter');
+        const labelFilter = document.getElementById('labelFilter');
+        const typeFilter = document.getElementById('typeFilter');
+        const tableBody = document.getElementById('materialTableBody');
+
+        function filterTable() {
+            const filterValues = {
+                serialNumber: serialNumberFilter.value.toLowerCase(),
+                brand: brandFilter.value.toLowerCase(),
+                model: modelFilter.value.toLowerCase(),
+                label: labelFilter.value.toLowerCase(),
+                type: typeFilter.value.toLowerCase(),
+            };
+
+            for (const row of tableBody.rows) {
+                const cells = row.cells;
+                const showRow = (
+                    (!filterValues.serialNumber || cells[1].textContent.toLowerCase().includes(filterValues.serialNumber)) &&
+                    (!filterValues.brand || cells[2].textContent.toLowerCase().includes(filterValues.brand)) &&
+                    (!filterValues.model || cells[3].textContent.toLowerCase().includes(filterValues.model)) &&
+                    (!filterValues.label || cells[4].textContent.toLowerCase().includes(filterValues.label)) &&
+                    (!filterValues.type || cells[5].textContent.toLowerCase().includes(filterValues.type))
+                );
+                row.style.display = showRow ? '' : 'none';
+            }
+        }
+
+        serialNumberFilter.addEventListener('input', filterTable);
+        brandFilter.addEventListener('input', filterTable);
+        modelFilter.addEventListener('input', filterTable);
+        labelFilter.addEventListener('input', filterTable);
+        typeFilter.addEventListener('input', filterTable);
+
+        // Handle details button click
+        const detailButtons = document.querySelectorAll('.btn-detail');
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const serialNumber = this.getAttribute('data-serialnumber');
+                const brand = this.getAttribute('data-brand');
+                const model = this.getAttribute('data-model');
+                const label = this.getAttribute('data-label');
+                const type = this.getAttribute('data-type');
+                const status = this.getAttribute('data-status');
+                const photo = this.getAttribute('data-photo');
+
+                document.getElementById('detailSerialNumber').textContent = serialNumber;
+                document.getElementById('detailBrand').textContent = brand;
+                document.getElementById('detailModel').textContent = model;
+                document.getElementById('detailLabel').textContent = label;
+                document.getElementById('detailType').textContent = type;
+                document.getElementById('detailStatus').textContent = status == 'IN_STOCK' ? 'In Stock' : 'Out of Stock';
+                document.getElementById('materialPhoto').setAttribute('src', photo);
+            });
+        });
+
+        // Handle edit button click
+        const editButtons = document.querySelectorAll('.btn-edit');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const serialNumber = this.getAttribute('data-serialnumber');
+                const brand = this.getAttribute('data-brand');
+                const model = this.getAttribute('data-model');
+                const label = this.getAttribute('data-label');
+                const type = this.getAttribute('data-type');
+                const status = this.getAttribute('data-status');
+
+                document.getElementById('editSerialNumber').value = serialNumber;
+                document.getElementById('editBrand').value = brand;
+                document.getElementById('editModel').value = model;
+                document.getElementById('editLabel').value = label;
+                document.getElementById('editMaterialType').value = type;
+                document.getElementById('editStatus').value = status;
+
+                document.getElementById('editMaterialForm').action = '/responsable/materiel/edit/' + id;
+            });
+        });
+
+        // Handle delete button click
+        const deleteButtons = document.querySelectorAll('.btn-delete');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                document.getElementById('deleteMaterialForm').action = '/responsable/materiel/delete/' + id;
+            });
+        });
+    });
+</script>
+</body>
+</html>

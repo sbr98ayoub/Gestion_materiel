@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{materiel.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{materiel.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/materiels/add}" class="btn btn-primary ms-2">[[#{materiel.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${materiels.empty}">[[#{materiel.list.empty}]]</div>
+            <div th:if="${!materiels.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{materiel.code.label}]]</th>
+                            <th scope="col">[[#{materiel.numeroSerie.label}]]</th>
+                            <th scope="col">[[#{materiel.marque.label}]]</th>
+                            <th scope="col">[[#{materiel.modele.label}]]</th>
+                            <th scope="col">[[#{materiel.libelle.label}]]</th>
+                            <th scope="col">[[#{materiel.description.label}]]</th>
+                            <th scope="col">[[#{materiel.bonEntree.label}]]</th>
+                            <th scope="col">[[#{materiel.bonSortie.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="materiel : ${materiels}">
+                            <td>[[${materiel.code}]]</td>
+                            <td>[[${materiel.numeroSerie}]]</td>
+                            <td>[[${materiel.marque}]]</td>
+                            <td>[[${materiel.modele}]]</td>
+                            <td>[[${materiel.libelle}]]</td>
+                            <td>[[${materiel.description}]]</td>
+                            <td>[[${materiel.bonEntree}]]</td>
+                            <td>[[${materiel.bonSortie}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/materiels/edit/{code}(code=${materiel.code})}" class="btn btn-sm btn-secondary">[[#{materiel.list.edit}]]</a>
+                                    <form th:action="@{/materiels/delete/{code}(code=${materiel.code})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{materiel.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

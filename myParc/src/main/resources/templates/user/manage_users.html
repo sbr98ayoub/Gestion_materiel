@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Manage Users</h2>
+    <form action="/admin/users/add" method="post">
+        <input type="text" name="nom" placeholder="Nom" required>
+        <input type="text" name="prenom" placeholder="Prenom" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <select name="role">
+            <option value="Admin">Admin</option>
+            <option value="Client">Client</option>
+            <option value="Responsable_Stock">Responsable Stock</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Add User</button>
+    </form>
+
+    <table class="table table-bordered mt-4">
+        <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="user" items="${users}">
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.nom} ${user.prenom}</td>
+                <td>${user.email}</td>
+                <td>${user.role}</td>
+                <td>
+                    <form action="/admin/users/delete" method="post" style="display:inline;">
+                        <input type="hidden" name="userId" value="${user.id}">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                    <!-- Add edit functionality as needed -->
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
